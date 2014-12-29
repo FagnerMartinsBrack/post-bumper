@@ -9,6 +9,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.fagnerbrack.postbumper.configs.Configurations;
+import com.fagnerbrack.postbumper.configs.facebook.BumpingStrategy;
 import com.fagnerbrack.postbumper.pages.ChainingException;
 import com.fagnerbrack.postbumper.pages.WrongPageException;
 import com.fagnerbrack.postbumper.pages.facebook.FacebookLogin;
@@ -33,7 +34,8 @@ public class Main {
 				.inPagesNavigation()
 				.goToPage( configs.facebook().bumper().page() )
 				.goToPost( configs.facebook().bumper().page().posts().get( 0 ) )
-				.goToPostSharings();
+				.goToPostSharings()
+				.bumpWith( BumpingStrategy.SHARED_BY_ME );
 		} catch ( WrongPageException | ChainingException | IOException e ) {
 			e.printStackTrace();
 		}
