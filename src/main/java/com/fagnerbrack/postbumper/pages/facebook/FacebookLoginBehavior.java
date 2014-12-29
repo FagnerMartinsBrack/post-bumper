@@ -1,24 +1,22 @@
 package com.fagnerbrack.postbumper.pages.facebook;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 import com.fagnerbrack.postbumper.pages.PageObjectBehavior;
 
-public class FBLoginPageBehavior extends PageObjectBehavior {
-	private WebDriver driver;
-	
-	public FBLoginPageBehavior( WebDriver driver ) {
+public class FacebookLoginBehavior extends PageObjectBehavior {
+	public FacebookLoginBehavior( WebDriver driver ) {
 		super( driver );
-		this.driver = driver;
 	}
 	
 	@Override
 	public boolean isCorrectPage() {
-		return driver.getTitle().startsWith( "Bem-vindo ao Facebook" );
+		return driver.findElements( By.cssSelector( "form#reg" ) ).size() == 1;
 	}
 	
 	@Override
-	public void navigate() {
+	public void doNavigate() {
 		driver.navigate().to( "http://facebook.com" );
 	}
 }

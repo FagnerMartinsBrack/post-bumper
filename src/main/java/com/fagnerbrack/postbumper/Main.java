@@ -1,5 +1,6 @@
 package com.fagnerbrack.postbumper;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.WebDriver;
@@ -7,9 +8,10 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.fagnerbrack.postbumper.configs.Configurations;
 import com.fagnerbrack.postbumper.pages.ChainingException;
 import com.fagnerbrack.postbumper.pages.WrongPageException;
-import com.fagnerbrack.postbumper.pages.facebook.FBLoginPage;
+import com.fagnerbrack.postbumper.pages.facebook.FacebookLogin;
 
 public class Main {
 	public static void main( String[] arguments ) {
@@ -24,11 +26,15 @@ public class Main {
 		driver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
 		
 		try {
-			FBLoginPage
+			Configurations configs = Configurations.getInstance();
+			FacebookLogin
 				.startUsing( driver )
-				.loginAs( "user", "pass" );
-			// TODO Read credentials from config
-		} catch ( WrongPageException | ChainingException e ) {
+				.loginWith( configs.facebook().auth() )
+				.inPagesNavigation()
+				.goToPage( configs.facebook().bumper().page() )
+				.goToPost( configs.facebook().bumper().page().posts().get( 0 ) )
+				.goToPostSharings();
+		} catch ( WrongPageException | ChainingException | IOException e ) {
 			e.printStackTrace();
 		}
 		

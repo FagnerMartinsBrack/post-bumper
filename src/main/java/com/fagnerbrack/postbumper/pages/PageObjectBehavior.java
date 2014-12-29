@@ -6,7 +6,7 @@ import org.openqa.selenium.WebDriver;
  * Associate consistent behavior between each Page Object.
  */
 public abstract class PageObjectBehavior implements DriverDecorable {
-	private WebDriver driver;
+	protected WebDriver driver;
 	
 	public PageObjectBehavior( WebDriver driver ) {
 		this.driver = driver;
@@ -19,9 +19,9 @@ public abstract class PageObjectBehavior implements DriverDecorable {
 	public abstract boolean isCorrectPage();
 	
 	/**
-	 * Navigate to the resource representing the Page Object in which this behavior is associated. 
+	 * Optional navigation behavior before checking if this page is correct or not.
 	 */
-	public abstract void navigate();
+	public abstract void doNavigate();
 	
 	public WebDriver driver() {
 		return driver;
