@@ -9,7 +9,7 @@ import com.google.common.base.Predicate;
 
 public class PostSharingsModalBehavior extends PageObjectBehavior {
 	private WebDriver driver;
-	private By scrollFinishedLocator = By.cssSelector( "#pagelet_scrolling_pager > *" );
+	private By scrollPlaceholderContents = By.cssSelector( "#pagelet_scrolling_pager > *" );
 	
 	public PostSharingsModalBehavior( WebDriver driver ) {
 		super( driver );
@@ -18,7 +18,7 @@ public class PostSharingsModalBehavior extends PageObjectBehavior {
 	
 	@Override
 	public boolean isCorrectPage() {
-		return driver.findElements( scrollFinishedLocator ).size() == 0;
+		return driver.findElements( scrollPlaceholderContents ).size() == 0;
 	}
 	
 	@Override
@@ -26,7 +26,7 @@ public class PostSharingsModalBehavior extends PageObjectBehavior {
 		new InfiniteScrolling( driver ).until(new Predicate<WebDriver>() {
 			@Override
 			public boolean apply( WebDriver input ) {
-				return driver.findElements( scrollFinishedLocator ).size() == 0;
+				return driver.findElements( scrollPlaceholderContents ).size() == 0;
 			}
 		});
 	}
