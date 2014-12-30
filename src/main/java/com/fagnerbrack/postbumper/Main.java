@@ -9,10 +9,13 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.fagnerbrack.postbumper.configs.Configurations;
-import com.fagnerbrack.postbumper.configs.facebook.BumpingStrategy;
 import com.fagnerbrack.postbumper.pages.ChainingException;
 import com.fagnerbrack.postbumper.pages.WrongPageException;
 import com.fagnerbrack.postbumper.pages.facebook.FacebookLogin;
+import com.fagnerbrack.postbumper.pages.facebook.post.PostSharings;
+import com.fagnerbrack.postbumper.pages.facebook.post.StaticComment;
+import com.fagnerbrack.postbumper.pages.facebook.post.StaticDeleteConfirmation;
+import com.fagnerbrack.postbumper.pages.facebook.post.StaticPost;
 
 public class Main {
 	public static void main( String[] arguments ) {
@@ -28,14 +31,22 @@ public class Main {
 		
 		try {
 			Configurations configs = Configurations.getInstance();
-			FacebookLogin
+			
+			PostSharings sharings = FacebookLogin
 				.startUsing( driver )
 				.loginWith( configs.facebook().auth() )
 				.inPagesNavigation()
 				.goToPage( configs.facebook().bumper().page() )
 				.goToPost( configs.facebook().bumper().page().posts().get( 0 ) )
 				.goToPostSharings()
-				.bumpWith( BumpingStrategy.SHARED_BY_ME );
+				.inSharingsByMe( configs.facebook().me() );
+			
+			for ( int i = 0; i < sharings.size(); i++ ) {
+				StaticPost sharing = sharings.get( i );
+				StaticComment comment = sharing.comment( "bump" );
+				StaticDeleteConfirmation confirmation = comment.delete();
+				confirmation.confirm();
+			}
 		} catch ( WrongPageException | ChainingException | IOException e ) {
 			e.printStackTrace();
 		}

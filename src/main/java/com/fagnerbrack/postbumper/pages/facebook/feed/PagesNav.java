@@ -13,9 +13,10 @@ import com.fagnerbrack.postbumper.pages.facebook.page.FBPage;
 
 public class PagesNav extends StaticPageObject {
 	private WebElement pagesNav;
+	private WebDriver driver;
 	
 	public PagesNav( WebDriver driver ) {
-		super( driver );
+		this.driver = driver;
 	}
 	
 	public static PagesNav createFrom( WebDriver driver ) {
@@ -25,12 +26,11 @@ public class PagesNav extends StaticPageObject {
 	}
 	
 	public FBPage goToPage( FBPageConfig pageData ) throws ChainingException {
-		pagesNav
-			.findElement( By.cssSelector( "[data-itemid='" + pageData.getPageId() + "']" ) )
-			.findElement( By.linkText( pageData.getPageName() ) )
-			.click();
+		String cssSelector = "[data-testid='left_nav_item_" + pageData.getPageName() + "']";
+		WebElement link = pagesNav.findElement( By.cssSelector( cssSelector ) );
+		link.click();
 		try {
-			return FBPage.createFrom( driver, pageData );
+			return FBPage.create( driver, pageData );
 		} catch ( WrongPageException e ) {
 			throw new ChainingException( e );
 		}

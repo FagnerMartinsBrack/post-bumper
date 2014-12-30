@@ -1,6 +1,5 @@
 package com.fagnerbrack.postbumper.pages;
 
-import org.openqa.selenium.WebDriver;
 
 /**
  * Handles custom user behavior within a dynamic page or component state. This interface should
@@ -8,9 +7,7 @@ import org.openqa.selenium.WebDriver;
  * from a user generated action (via AJAX or a regular request).
  */
 public abstract class DynamicPageObject {
-	protected WebDriver driver;
-	
-	public DynamicPageObject( PageObjectBehavior pageBehavior ) throws WrongPageException {
+	protected DynamicPageObject( PageObjectBehavior pageBehavior ) throws WrongPageException {
 		this( pageBehavior, false );
 	}
 	
@@ -23,7 +20,5 @@ public abstract class DynamicPageObject {
 		if ( !pageBehavior.isCorrectPage() ) {
 			throw new WrongPageException();
 		}
-		
-		this.driver = pageBehavior.driver();
 	}
 }

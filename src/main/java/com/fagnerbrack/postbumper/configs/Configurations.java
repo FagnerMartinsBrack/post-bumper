@@ -13,7 +13,7 @@ import com.fagnerbrack.postbumper.configs.facebook.FBConfigs;
 public class Configurations {
 	private FBConfigs facebook;
 	
-	private Configurations( JSONObject configs ) {
+	public Configurations( JSONObject configs ) {
 		this.facebook = new FBConfigs( ( JSONObject )configs.get( "facebook" ) );
 	}
 	

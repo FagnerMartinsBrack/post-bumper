@@ -5,7 +5,7 @@ import org.openqa.selenium.WebDriver;
 /**
  * Associate consistent behavior between each Page Object.
  */
-public abstract class PageObjectBehavior implements DriverDecorable {
+public abstract class PageObjectBehavior {
 	protected WebDriver driver;
 	
 	public PageObjectBehavior( WebDriver driver ) {
@@ -22,8 +22,4 @@ public abstract class PageObjectBehavior implements DriverDecorable {
 	 * Optional navigation behavior before checking if this page is correct or not.
 	 */
 	public abstract void doNavigate();
-	
-	public WebDriver driver() {
-		return driver;
-	}
 }

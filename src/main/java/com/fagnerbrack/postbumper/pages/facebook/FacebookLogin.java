@@ -16,14 +16,17 @@ import com.fagnerbrack.postbumper.pages.facebook.feed.FacebookFeed;
 public class FacebookLogin extends DynamicPageObject implements LoginPage<FacebookFeed> {
 	private WebElement email;
 	private WebElement pass;
+	private WebDriver driver;
 	
-	private FacebookLogin( FacebookLoginBehavior loginPageBehavior ) throws WrongPageException {
+	private FacebookLogin( WebDriver driver, FacebookLoginBehavior loginPageBehavior )
+	throws WrongPageException {
 		super( loginPageBehavior, Navigate.YES );
+		this.driver = driver;
 	}
 	
 	public static FacebookLogin startUsing( WebDriver driver ) throws WrongPageException {
 		FacebookLoginBehavior loginPageBehavior = new FacebookLoginBehavior( driver );
-		FacebookLogin page = new FacebookLogin( loginPageBehavior );
+		FacebookLogin page = new FacebookLogin( driver, loginPageBehavior );
 		PageFactory.initElements( driver, page );
 		return page;
 	}
@@ -37,7 +40,7 @@ public class FacebookLogin extends DynamicPageObject implements LoginPage<Facebo
 		pass.submit();
 		
 		try {
-			return FacebookFeed.createFrom( driver );
+			return FacebookFeed.create( driver );
 		} catch ( WrongPageException e ) {
 			if ( driver.findElements( By.cssSelector( "body.login_page" ) ).size() > 0 ) {
 				throw new ChainingException( "Login failed, check your login information!" );

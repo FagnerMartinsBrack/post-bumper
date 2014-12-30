@@ -17,17 +17,17 @@ import com.fagnerbrack.postbumper.pages.WrongPageException;
 import com.fagnerbrack.postbumper.pages.facebook.post.FBPost;
 
 public class FBPage extends DynamicPageObject {
-	private PageObjectBehavior pageBehavior;
 	private WebElement posts;
+	private WebDriver driver;
 	
-	private FBPage( PageObjectBehavior pageBehavior ) throws WrongPageException {
+	private FBPage( WebDriver driver, PageObjectBehavior pageBehavior ) throws WrongPageException {
 		super( pageBehavior );
-		this.pageBehavior = pageBehavior;
+		this.driver = driver;
 	}
 	
-	public static FBPage createFrom( WebDriver driver, FBPageConfig pageData )
+	public static FBPage create( WebDriver driver, FBPageConfig pageData )
 	throws WrongPageException {
-		FBPage product = new FBPage( new FBPageBehavior( driver, pageData ) );
+		FBPage product = new FBPage( driver, new FBPageBehavior( driver, pageData ) );
 		product.posts = driver.findElement( By.id( "PagePostsPagelet_" + pageData.getPageId() ) );
 		return product;
 	}
@@ -70,7 +70,7 @@ public class FBPage extends DynamicPageObject {
 		linkToPost.click();
 		
 		try {
-			return FBPost.createFrom( pageBehavior.driver(), postData );
+			return FBPost.create( driver, postData );
 		} catch ( WrongPageException e ) {
 			throw new ChainingException( e );
 		}
