@@ -7,29 +7,29 @@ import org.openqa.selenium.WebElement;
 import com.fagnerbrack.postbumper.configs.facebook.FBPostConfig;
 import com.fagnerbrack.postbumper.pages.ChainingException;
 import com.fagnerbrack.postbumper.pages.DynamicPageObject;
+import com.fagnerbrack.postbumper.pages.Navigate;
 import com.fagnerbrack.postbumper.pages.PageObjectBehavior;
 import com.fagnerbrack.postbumper.pages.WrongPageException;
 
 public class FBPost extends DynamicPageObject {
 	private WebDriver driver;
 	
-	private FBPost( WebDriver driver, PageObjectBehavior pageBehavior ) throws WrongPageException {
-		super( pageBehavior );
+	private FBPost( WebDriver driver, PageObjectBehavior pageBehavior, boolean navigate )
+	throws WrongPageException {
+		super( pageBehavior, navigate );
 		this.driver = driver;
 	}
 	
-	public static FBPost startWith( WebDriver driver, FBPostConfig postData )
+	public static FBPost startUsing( WebDriver driver, FBPostConfig postData )
 	throws WrongPageException {
-		driver.navigate().to( "https://www.facebook.com/permalink.php"
-			+ "?story_fbid=720471394727826&id=720470948061204" );
 		FBPostBehavior pageBehavior = new FBPostBehavior( driver, postData );
-		return new FBPost( driver, pageBehavior );
+		return new FBPost( driver, pageBehavior, Navigate.YES );
 	}
 	
 	public static FBPost create( WebDriver driver, FBPostConfig postData )
 	throws WrongPageException {
 		FBPostBehavior pageBehavior = new FBPostBehavior( driver, postData );
-		return new FBPost( driver, pageBehavior );
+		return new FBPost( driver, pageBehavior, Navigate.NO );
 	}
 	
 	public PostSharingsModal goToPostSharings() throws ChainingException {
@@ -43,7 +43,7 @@ public class FBPost extends DynamicPageObject {
 		}
 	}
 	
-	public StaticPost inPost() {
+	public StaticPost inPostContent() {
 		return StaticPost.createPermalinkPost( driver );
 	}
 }

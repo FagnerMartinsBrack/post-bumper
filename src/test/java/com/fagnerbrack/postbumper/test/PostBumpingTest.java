@@ -20,9 +20,14 @@ import com.fagnerbrack.postbumper.configs.Configurations;
 import com.fagnerbrack.postbumper.pages.ChainingException;
 import com.fagnerbrack.postbumper.pages.WrongPageException;
 import com.fagnerbrack.postbumper.pages.facebook.FacebookLogin;
+import com.fagnerbrack.postbumper.pages.facebook.page.FBPage;
 import com.fagnerbrack.postbumper.pages.facebook.post.FBPost;
+import com.fagnerbrack.postbumper.pages.facebook.post.PostSharings;
+import com.fagnerbrack.postbumper.pages.facebook.post.StaticComment;
+import com.fagnerbrack.postbumper.pages.facebook.post.StaticDeleteConfirmation;
+import com.fagnerbrack.postbumper.pages.facebook.post.StaticPost;
 
-public class PostTest {
+public class PostBumpingTest {
 	private WebDriver driver;
 	
 	@Before
@@ -49,12 +54,33 @@ public class PostTest {
 			.startUsing( driver )
 			.loginWith( configs.facebook().auth() );
 		FBPost
-			.startWith( driver, configs.facebook().bumper().page().posts().get( 0 ) )
-			.inPost()
+			.startUsing( driver, configs.facebook().bumper().page().posts().get( 0 ) )
+			.inPostContent()
 			.comment( "bump" )
 			.delete()
 			.confirm();
-		Assert.assertTrue( "Should not throw any errors", true );
+		Assert.assertTrue( "Should execute the process without missing elements", true );
+	}
+	
+	@Test
+	public void should_comment_and_delete_in_post_sharings()
+	throws ChainingException, WrongPageException {
+		Configurations configs = getConfigs( "should_comment_and_delete_in_post_sharings" );
+		FacebookLogin
+			.startUsing( driver )
+			.loginWith( configs.facebook().auth() );
+		PostSharings sharings = FBPage
+			.startUsing( driver, configs.facebook().bumper().page() )
+			.goToPost( configs.facebook().bumper().page().posts().get( 0 ) )
+			.goToPostSharings()
+			.inSharingsByMe( configs.facebook().me() );
+		for ( int i = 0; i < sharings.size(); i++ ) {
+			StaticPost post = sharings.get( i );
+			StaticComment comment = post.comment( "bump" );
+			StaticDeleteConfirmation confirmation = comment.delete();
+			confirmation.confirm();
+		}
+		Assert.assertTrue( "Should execute the process without missing elements", true );
 	}
 	
 	private Configurations getConfigs( String fileName ) {

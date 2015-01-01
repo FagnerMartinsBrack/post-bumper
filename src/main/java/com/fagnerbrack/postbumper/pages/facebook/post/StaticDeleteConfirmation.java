@@ -37,6 +37,8 @@ public class StaticDeleteConfirmation extends StaticPageObject {
 	}
 	
 	public void confirm() {
+		// TODO this is causing a NoSuchElementException in the main execution
+		// (use Wait? Test confirmation layer from sharing modal?)
 		WebElement confirmButton = layer.findElement( By.cssSelector( ".layerConfirm" ) );
 		confirmButton.click();
 	}

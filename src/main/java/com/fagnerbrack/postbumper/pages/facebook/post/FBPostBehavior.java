@@ -4,7 +4,6 @@ import org.openqa.selenium.WebDriver;
 
 import com.fagnerbrack.postbumper.configs.facebook.FBPostConfig;
 import com.fagnerbrack.postbumper.pages.PageObjectBehavior;
-import com.fagnerbrack.postbumper.pages.NotImplementedException;
 
 public class FBPostBehavior extends PageObjectBehavior {
 	private WebDriver driver;
@@ -23,6 +22,8 @@ public class FBPostBehavior extends PageObjectBehavior {
 	
 	@Override
 	public void doNavigate() {
-		throw new NotImplementedException( "The post navigation behavior is not yet implemented" );
+		String url = "https://www.facebook.com/permalink.php";
+		String query = "story_fbid=" + postData.getStoryId() + "&id=" + postData.getPostId();
+		driver.navigate().to( url + "?" + query );
 	}
 }
