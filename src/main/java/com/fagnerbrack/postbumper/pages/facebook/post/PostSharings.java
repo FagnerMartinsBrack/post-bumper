@@ -20,25 +20,12 @@ public class PostSharings extends StaticPageObject {
 		this.sharings = sharings;
 	}
 	
-	public static PostSharings createSharingsByMe( WebDriver driver, FBMeConfigs me )
-	throws WrongPageException {
-		WebElement dialog = null;
-		List<WebElement> dialogs = driver.findElements( By.cssSelector( "[role='dialog']" ) );
-		for ( WebElement current : dialogs ) {
-			if ( current.isDisplayed() ) {
-				dialog = current;
-				break;
-			}
-		}
-		
-		if ( dialog == null ) {
-			throw new WrongPageException();
-		}
-		
+	public static PostSharings createSharingsByMe(
+		WebDriver driver,
+		FBMeConfigs me,
+		List<WebElement> allSharings
+	) throws WrongPageException {
 		List<WebElement> sharingsByMe = new ArrayList<WebElement>();
-		List<WebElement> allSharings = dialog
-			.findElements( By.cssSelector( ".userContentWrapper" ) );
-		
 		for ( WebElement sharedPost : allSharings ) {
 			WebElement author = sharedPost
 				.findElement( By.cssSelector( ".profileLink[data-hovercard]" ) );
@@ -46,7 +33,6 @@ public class PostSharings extends StaticPageObject {
 				sharingsByMe.add( sharedPost );
 			}
 		}
-		
 		return new PostSharings( driver, sharingsByMe );
 	}
 	

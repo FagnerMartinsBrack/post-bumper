@@ -59,28 +59,34 @@ public class PostBumpingTest {
 			.comment( "bump" )
 			.delete()
 			.confirm();
-		Assert.assertTrue( "Should execute the process without missing elements", true );
+		Assert.assertTrue( "Should execute the process without error (missing elements)", true );
 	}
 	
 	@Test
 	public void should_comment_and_delete_in_post_sharings()
 	throws ChainingException, WrongPageException {
 		Configurations configs = getConfigs( "should_comment_and_delete_in_post_sharings" );
+		
 		FacebookLogin
 			.startUsing( driver )
 			.loginWith( configs.facebook().auth() );
+		
 		PostSharings sharings = FBPage
 			.startUsing( driver, configs.facebook().bumper().page() )
 			.goToPost( configs.facebook().bumper().page().posts().get( 0 ) )
 			.goToPostSharings()
 			.inSharingsByMe( configs.facebook().me() );
+		
+		Assert.assertEquals( "Should load 2 shared posts", 2, sharings.size() );
+		
 		for ( int i = 0; i < sharings.size(); i++ ) {
-			StaticPost post = sharings.get( i );
-			StaticComment comment = post.comment( "bump" );
+			StaticPost sharedPost = sharings.get( i );
+			StaticComment comment = sharedPost.comment( "bump" );
 			StaticDeleteConfirmation confirmation = comment.delete();
 			confirmation.confirm();
 		}
-		Assert.assertTrue( "Should execute the process without missing elements", true );
+		
+		Assert.assertTrue( "Should execute the process without error (missing elements)", true );
 	}
 	
 	private Configurations getConfigs( String fileName ) {

@@ -5,41 +5,29 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.fagnerbrack.postbumper.pages.StaticPageObject;
-import com.google.common.base.Function;
 
 public class StaticDeleteConfirmation extends StaticPageObject {
-	private WebElement layer;
+	private WebDriver driver;
 	
-	private StaticDeleteConfirmation( WebElement layer ) {
-		this.layer = layer;
+	private StaticDeleteConfirmation( WebDriver driver ) {
+		this.driver = driver;
 	}
 	
 	public static StaticDeleteConfirmation create( WebDriver driver ) {
-		WebElement visibleLayer = new WebDriverWait( driver, 10, 1000 )
-			.until(new Function<WebDriver, WebElement>() {
-				@Override
-				public WebElement apply( WebDriver input ) {
-					List<WebElement> layers = input.findElements(
-						By.cssSelector( ".uiLayer" )
-					);
-					for ( WebElement layer : layers ) {
-						if( layer.isDisplayed() ) {
-							return layer;
-						}
-					}
-					return null;
-				}
-			});
-		return new StaticDeleteConfirmation( visibleLayer );
+		return new StaticDeleteConfirmation( driver );
 	}
 	
 	public void confirm() {
-		// TODO this is causing a NoSuchElementException in the main execution
-		// (use Wait? Test confirmation layer from sharing modal?)
-		WebElement confirmButton = layer.findElement( By.cssSelector( ".layerConfirm" ) );
-		confirmButton.click();
+		List<WebElement> confirmButtons = driver
+			.findElements( By.cssSelector( "button.layerConfirm" ) );
+		for ( WebElement confirmButton : confirmButtons ) {
+			if ( !confirmButton.isDisplayed() ) {
+				continue;
+			}
+			confirmButton.click();
+			break;
+		}
 	}
 }

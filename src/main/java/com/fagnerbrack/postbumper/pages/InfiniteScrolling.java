@@ -23,12 +23,12 @@ public class InfiniteScrolling extends WebDriverWait {
 		super.until(new Predicate<WebDriver>() {
 			@Override
 			public boolean apply( WebDriver input ) {
+				logger.info( "Loading more content..." );
+				js.executeScript( "window.scrollTo( 0, document.body.scrollHeight );" );
 				if( isTrue.apply( input ) ) {
 					logger.info( "All content was loaded." );
 					return true;
 				}
-				logger.info( "Loading more content..." );
-				js.executeScript( "window.scrollTo( 0, document.body.scrollHeight );" );
 				return false;
 			}
 		});
