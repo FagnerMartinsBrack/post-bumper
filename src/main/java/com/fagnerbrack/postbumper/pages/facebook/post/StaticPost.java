@@ -1,8 +1,7 @@
 package com.fagnerbrack.postbumper.pages.facebook.post;
 
-import java.util.List;
-
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -31,9 +30,13 @@ public class StaticPost extends StaticPageObject {
 	
 	public StaticComment comment( String message ) throws ChainingException {
 		// Enables the content editable element to allow typing the comment
-		List<WebElement> contentEditableTrigger = postElement
-			.findElements( By.className( "UFIAddCommentInput" ) );
-		contentEditableTrigger.get( 0 ).click();
+		WebElement contentEditableTrigger = postElement
+			.findElement( By.className( "UFIAddCommentInput" ) );
+		
+		// Selenium click causes an ElementNotVisibleException, probably due to the fact the
+		// element is outside the visible area of the scroll 
+		JavascriptExecutor js = ( JavascriptExecutor )driver;
+		js.executeScript( "arguments[0].click();", contentEditableTrigger );
 		
 		// Add the comment
 		WebElement commentBox = postElement.findElement( By.cssSelector( "[contenteditable]" ) );
