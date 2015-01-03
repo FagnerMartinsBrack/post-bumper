@@ -1,14 +1,15 @@
 package com.fagnerbrack.postbumper.pages;
 
+import java.util.logging.Logger;
+
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Predicate;
-import com.sun.istack.internal.logging.Logger;
 
 public class InfiniteScrolling extends WebDriverWait {
-	private Logger logger = Logger.getLogger( this.getClass() );
+	private Logger logger = Logger.getGlobal();
 	private WebDriver driver;
 	
 	public InfiniteScrolling( WebDriver driver ) {

@@ -17,7 +17,7 @@ public class FBPageBehavior extends PageObjectBehavior {
 	
 	@Override
 	public boolean isCorrectPage() {
-		return driver.getTitle().equals( pageData.getPageName() );
+		return driver.getTitle().contains( pageData.getPageName() );
 	}
 	
 	@Override
