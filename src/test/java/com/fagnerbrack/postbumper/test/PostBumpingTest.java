@@ -26,6 +26,7 @@ import com.fagnerbrack.postbumper.pages.facebook.post.PostSharings;
 import com.fagnerbrack.postbumper.pages.facebook.post.StaticComment;
 import com.fagnerbrack.postbumper.pages.facebook.post.StaticDeleteConfirmation;
 import com.fagnerbrack.postbumper.pages.facebook.post.StaticPost;
+import com.fagnerbrack.postbumper.pages.facebook.post.UnableToCommentException;
 
 public class PostBumpingTest {
 	private WebDriver driver;
@@ -48,7 +49,8 @@ public class PostBumpingTest {
 	}
 	
 	@Test
-	public void should_comment_and_delete() throws ChainingException, WrongPageException {
+	public void should_comment_and_delete()
+	throws ChainingException, WrongPageException, UnableToCommentException {
 		Configurations configs = getConfigs( "should_comment_and_delete" );
 		FacebookLogin
 			.startUsing( driver )
@@ -64,7 +66,7 @@ public class PostBumpingTest {
 	
 	@Test
 	public void should_comment_and_delete_in_post_sharings()
-	throws ChainingException, WrongPageException {
+	throws ChainingException, WrongPageException, UnableToCommentException {
 		Configurations configs = getConfigs( "should_comment_and_delete_in_post_sharings" );
 		
 		FacebookLogin

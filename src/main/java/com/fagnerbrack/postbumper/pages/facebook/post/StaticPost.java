@@ -1,5 +1,7 @@
 package com.fagnerbrack.postbumper.pages.facebook.post;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -28,15 +30,22 @@ public class StaticPost extends StaticPageObject {
 		return new StaticPost( driver, sharedPost );
 	}
 	
-	public StaticComment comment( String message ) throws ChainingException {
+	public StaticComment comment( String message )
+	throws ChainingException, UnableToCommentException {
 		// Enables the content editable element to allow typing the comment
-		WebElement contentEditableTrigger = postElement
-			.findElement( By.className( "UFIAddCommentInput" ) );
+		List<WebElement> contentEditableTrigger = postElement
+			.findElements( By.className( "UFIAddCommentInput" ) );
+		
+		// If there is no comment element it could mean that the user does not belog to a group
+		// anymore when bumping the group posts.
+		if ( contentEditableTrigger.size() == 0 ) {
+			throw new UnableToCommentException();
+		}
 		
 		// Selenium click causes an ElementNotVisibleException, probably due to the fact the
 		// element is outside the visible area of the scroll 
 		JavascriptExecutor js = ( JavascriptExecutor )driver;
-		js.executeScript( "arguments[0].click();", contentEditableTrigger );
+		js.executeScript( "arguments[0].click();", contentEditableTrigger.get( 0 ) );
 		
 		// Add the comment
 		WebElement commentBox = postElement.findElement( By.cssSelector( "[contenteditable]" ) );

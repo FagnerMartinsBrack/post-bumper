@@ -16,6 +16,7 @@ import com.fagnerbrack.postbumper.pages.facebook.post.PostSharings;
 import com.fagnerbrack.postbumper.pages.facebook.post.StaticComment;
 import com.fagnerbrack.postbumper.pages.facebook.post.StaticDeleteConfirmation;
 import com.fagnerbrack.postbumper.pages.facebook.post.StaticPost;
+import com.fagnerbrack.postbumper.pages.facebook.post.UnableToCommentException;
 
 public class Main {
 	public static void main( String[] arguments ) {
@@ -43,9 +44,13 @@ public class Main {
 			
 			for ( int i = 0; i < sharings.size(); i++ ) {
 				StaticPost sharing = sharings.get( i );
-				StaticComment comment = sharing.comment( "bump" );
-				StaticDeleteConfirmation confirmation = comment.delete();
-				confirmation.confirm();
+				try {
+					StaticComment comment = sharing.comment( "bump" );
+					StaticDeleteConfirmation confirmation = comment.delete();
+					confirmation.confirm();
+				} catch ( UnableToCommentException e ) {
+					System.out.println( "Unable to comment in a post" );
+				}
 			}
 		} catch ( WrongPageException | ChainingException | IOException e ) {
 			e.printStackTrace();
