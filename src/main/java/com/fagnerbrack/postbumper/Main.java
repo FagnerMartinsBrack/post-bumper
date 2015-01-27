@@ -28,12 +28,12 @@ public class Main {
 		capabilities.setCapability( ChromeOptions.CAPABILITY, options );
 		
 		WebDriver driver = new ChromeDriver( capabilities );
-		driver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
+		driver.manage().timeouts().implicitlyWait( 20, TimeUnit.SECONDS );
 		
 		try {
 			Configurations configs = Configurations.getInstance();
 			
-			PostSharings sharings = FacebookLogin
+			PostSharings sharingsByMe = FacebookLogin
 				.startUsing( driver )
 				.loginWith( configs.facebook().auth() )
 				.inPagesNavigation()
@@ -42,20 +42,24 @@ public class Main {
 				.goToPostSharings()
 				.inSharingsByMe( configs.facebook().me() );
 			
-			for ( int i = 0; i < sharings.size(); i++ ) {
-				StaticPost sharing = sharings.get( i );
-				try {
-					StaticComment comment = sharing.comment( "bump" );
-					StaticDeleteConfirmation confirmation = comment.delete();
-					confirmation.confirm();
-				} catch ( UnableToCommentException e ) {
-					System.out.println( "Unable to comment in a post" );
-				}
-			}
+			bumpMySharings( sharingsByMe );
 		} catch ( WrongPageException | ChainingException | IOException e ) {
 			e.printStackTrace();
 		}
 		
 		driver.quit();
+	}
+	
+	private static void bumpMySharings( PostSharings sharingsByMe ) throws ChainingException {
+		for ( int i = 0; i < sharingsByMe.size(); i++ ) {
+			StaticPost sharing = sharingsByMe.get( i );
+			try {
+				StaticComment comment = sharing.comment( "." );
+				StaticDeleteConfirmation confirmation = comment.delete();
+				confirmation.confirm();
+			} catch ( UnableToCommentException e ) {
+				System.out.println( "Unable to comment in a post" );
+			}
+		}
 	}
 }
