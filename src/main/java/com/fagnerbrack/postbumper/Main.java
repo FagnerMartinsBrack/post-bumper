@@ -17,6 +17,9 @@ import com.fagnerbrack.postbumper.pages.facebook.post.StaticComment;
 import com.fagnerbrack.postbumper.pages.facebook.post.StaticDeleteConfirmation;
 import com.fagnerbrack.postbumper.pages.facebook.post.StaticPost;
 import com.fagnerbrack.postbumper.pages.facebook.post.UnableToCommentException;
+import com.fagnerbrack.postbumper.repetition.DefaultRepetition;
+import com.fagnerbrack.postbumper.repetition.RepetitionAction;
+import com.fagnerbrack.postbumper.repetition.RepetitionException;
 
 public class Main {
 	public static void main( String[] arguments ) {
@@ -33,7 +36,7 @@ public class Main {
 		try {
 			Configurations configs = Configurations.getInstance();
 			
-			PostSharings sharingsByMe = FacebookLogin
+			final PostSharings sharingsByMe = FacebookLogin
 				.startUsing( driver )
 				.loginWith( configs.facebook().auth() )
 				.inPagesNavigation()
@@ -42,8 +45,16 @@ public class Main {
 				.goToPostSharings()
 				.inSharingsByMe( configs.facebook().me() );
 			
+			new DefaultRepetition(
+				configs.facebook().bumper().page()
+			).repeat(new RepetitionAction() {
+				@Override
+				public void run() throws ChainingException {
+					bumpMySharings( sharingsByMe );
+				}
+			});
 			bumpMySharings( sharingsByMe );
-		} catch ( WrongPageException | ChainingException | IOException e ) {
+		} catch ( WrongPageException | ChainingException | IOException | RepetitionException e ) {
 			e.printStackTrace();
 		}
 		
